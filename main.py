@@ -3,6 +3,7 @@ from discord.ext import commands
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
+import json
 
 # ---------------------- CONFIGURATION ----------------------
 TOKEN = os.getenv("TOKEN")  # À configurer dans Render comme variable d'environnement
@@ -12,7 +13,8 @@ SHEET_NAME = "Feuille 1"  # À adapter si besoin
 
 # ---------------------- GOOGLE SHEETS SETUP ----------------------
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("service-account.json", scope)
+creds_dict = json.loads(os.getenv("GOOGLE_CREDS"))
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 sheet = client.open(SPREADSHEET_NAME).worksheet(SHEET_NAME)
 
